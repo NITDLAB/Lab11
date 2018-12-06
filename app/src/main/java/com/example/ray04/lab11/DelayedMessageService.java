@@ -20,6 +20,7 @@ public class DelayedMessageService extends IntentService {
     public static final String MESSAGE = "message";
     public static final String TAG = "DelayedMessageService";
     private static final int NOTIFICATION_ID = 2999 ;
+    private long time = 0;
 
     public DelayedMessageService() {
         super("DelayedMessageService");
@@ -27,18 +28,21 @@ public class DelayedMessageService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        String text = intent.getStringExtra(MESSAGE);
+
         synchronized (this)
         {
             if (intent != null) {
+                time = intent.getLongExtra("time",5);
                 try{
-                    wait(10000);
+                    Log.v("TAG", String.valueOf(time));
+                    wait(time*1000);
                 }catch (InterruptedException e)
                 {
                     e.printStackTrace();
                 }
             }
         }
-        String text = intent.getStringExtra(MESSAGE);
         showText(text);
     }
 
